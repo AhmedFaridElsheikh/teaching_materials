@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Section 3 — Pandas Practice</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --black: #0f0f0f;
+    --white: #fafafa;
+    --accent: #1a56db;
+    --light-gray: #f0f0f0;
+    --mid-gray: #666;
+    --border: #ddd;
+    --q-bg: #fff;
+    --tag-bg: #e8f0fe;
+    --tag-color: #1a56db;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    font-size: 11pt;
+    line-height: 1.6;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { font-size: 10pt; }
+    .page-break { page-break-before: always; }
+    .no-print { display: none; }
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 40px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    border-bottom: 3px solid var(--black);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .section-label {
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid-gray);
+    margin-bottom: 4px;
+  }
+  .title {
+    font-size: 22pt;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .title span { color: var(--accent); }
+  .meta {
+    text-align: right;
+    font-size: 9pt;
+    color: var(--mid-gray);
+    line-height: 1.8;
+  }
+  .dataset-badge {
+    display: inline-block;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8pt;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-top: 8px;
+  }
+
+  /* ── CHEATSHEET ── */
+  .cheatsheet {
+    background: var(--light-gray);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+  .cheatsheet-title {
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 32px;
+  }
+  .cheat-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 9.5pt;
+    padding: 3px 0;
+    border-bottom: 1px dashed #ccc;
+  }
+  .cheat-label {
+    color: var(--mid-gray);
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  .cheat-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9pt;
+    color: var(--black);
+    font-weight: 600;
+  }
+
+  /* ── SETUP BOX ── */
+  .setup-box {
+    border: 2px solid var(--black);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    background: var(--white);
+  }
+  .setup-title {
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .setup-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9pt;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 4px;
+    padding: 10px 14px;
+    line-height: 1.7;
+  }
+  .code-kw { color: #569cd6; }
+  .code-fn { color: #dcdcaa; }
+  .code-str { color: #ce9178; }
+  .code-cm { color: #6a9955; }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 20px;
+  }
+  .section-divider-label {
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--mid-gray);
+  }
+  .section-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── QUESTION CARDS ── */
+  .questions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .q-card {
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    background: var(--q-bg);
+    break-inside: avoid;
+  }
+  .q-card.bonus {
+    border-color: var(--accent);
+    background: var(--tag-bg);
+  }
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .q-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9pt;
+    font-weight: 700;
+    background: var(--black);
+    color: var(--white);
+    padding: 2px 8px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .q-card.bonus .q-number {
+    background: var(--accent);
+  }
+  .q-topic {
+    font-size: 8.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mid-gray);
+  }
+  .q-card.bonus .q-topic { color: var(--accent); }
+  .q-text {
+    font-size: 10.5pt;
+    color: var(--black);
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .q-hint {
+    font-size: 9pt;
+    color: var(--mid-gray);
+    font-style: italic;
+  }
+  .answer-box {
+    margin-top: 10px;
+    border: 1px dashed #bbb;
+    border-radius: 4px;
+    height: 28px;
+    background: #fafafa;
+  }
+
+  /* ── PRINT BUTTON ── */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--black);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11pt;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .print-btn:hover { background: var(--accent); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="section-label">Data analysis Lab · Section</div>
+        <div class="title">Pandas <span>Practice</span></div>
+        <div class="dataset-badge">iris_dataset · 150 rows · 5 columns</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHEATSHEET -->
+  <div class="cheatsheet">
+    <div class="cheatsheet-title">📋 Syntax Cheatsheet</div>
+    <div class="cheat-grid">
+      <div class="cheat-row"><span class="cheat-label">First 5 rows</span><span class="cheat-code">df.head()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Count per category</span><span class="cheat-code">df['col'].value_counts()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Shape (rows, cols)</span><span class="cheat-code">df.shape</span></div>
+      <div class="cheat-row"><span class="cheat-label">Unique values</span><span class="cheat-code">df['col'].unique()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Data types + nulls</span><span class="cheat-code">df.info()</span></div>
+      <div class="cheat-row"><span class="cheat-label">How many unique</span><span class="cheat-code">df['col'].nunique()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Summary statistics</span><span class="cheat-code">df.describe()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Filter rows</span><span class="cheat-code">df[df['col'] > value]</span></div>
+      <div class="cheat-row"><span class="cheat-label">Mean of column</span><span class="cheat-code">df['col'].mean()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Filter by text</span><span class="cheat-code">df[df['col'] == 'text']</span></div>
+      <div class="cheat-row"><span class="cheat-label">Check missing values</span><span class="cheat-code">df.isnull().sum()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Group + aggregate</span><span class="cheat-code">df.groupby('col')['col2'].mean()</span></div>
+      <div class="cheat-row"><span class="cheat-label">Sort values</span><span class="cheat-code">df.sort_values('col')</span></div>
+      <div class="cheat-row"><span class="cheat-label">Largest N values</span><span class="cheat-code">df.nlargest(n, 'col')</span></div>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div class="setup-box">
+    <div class="setup-title">▶ Run this first in your notebook — do not change it</div>
+    <div class="setup-code">
+<span class="code-kw">import</span> pandas <span class="code-kw">as</span> pd<br>
+<span class="code-kw">from</span> sklearn.datasets <span class="code-kw">import</span> <span class="code-fn">load_iris</span><br>
+<br>
+iris_raw = <span class="code-fn">load_iris</span>()<br>
+df = pd.<span class="code-fn">DataFrame</span>(iris_raw.data, columns=[<span class="code-str">'sepal_length'</span>, <span class="code-str">'sepal_width'</span>, <span class="code-str">'petal_length'</span>, <span class="code-str">'petal_width'</span>])<br>
+df[<span class="code-str">'species'</span>] = iris_raw.target_names[iris_raw.target]<br>
+<br>
+<span class="code-cm"># Columns: sepal_length | sepal_width | petal_length | petal_width | species</span>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="section-divider">
+    <span class="section-divider-label">Questions</span>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="questions-grid">
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q1</span>
+        <span class="q-topic">First Look</span>
+      </div>
+      <div class="q-text">Display the first 5 rows of the dataset.</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q2</span>
+        <span class="q-topic">Data Info</span>
+      </div>
+      <div class="q-text">Show data types and check if there are any missing values.</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q3</span>
+        <span class="q-topic">Species Count</span>
+      </div>
+      <div class="q-text">How many species are in the dataset? How many flowers per species?</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q4</span>
+        <span class="q-topic">Summary Statistics</span>
+      </div>
+      <div class="q-text">Show the summary statistics (mean, std, min, max) for all numeric columns.</div>
+      <div class="q-hint">Hint: One function does all of this at once.</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q5</span>
+        <span class="q-topic">Groupby</span>
+      </div>
+      <div class="q-text">What is the average <code>petal_length</code> for each species?</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q6</span>
+        <span class="q-topic">Filter</span>
+      </div>
+      <div class="q-text">Filter and display only flowers where <code>petal_length</code> is greater than 5. How many rows did you get?</div>
+    </div>
+
+    <div class="q-card">
+      <div class="q-header">
+        <span class="q-number">Q7</span>
+        <span class="q-topic">Filter + Groupby</span>
+      </div>
+      <div class="q-text">From the flowers with <code>petal_length &gt; 5</code>, what is the average <code>sepal_width</code> per species?</div>
+      <div class="q-hint">Hint: Filter first, then groupby on the result.</div>
+    </div>
+
+    <div class="q-card bonus">
+      <div class="q-header">
+        <span class="q-number">Q8</span>
+        <span class="q-topic">⭐ Bonus</span>
+      </div>
+      <div class="q-text">Which species has the largest average <code>petal_width</code>? Show all species sorted from highest to lowest.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<button class="print-btn no-print" onclick="window.print()">🖨 Print</button>
+
+</body>
+</html>

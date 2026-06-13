@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE141 — Java for Power Engineers · Ahmed Farid Elsheikh</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #F4F6FB;
+    --surface:  #FFFFFF;
+    --navy:     #0A1628;
+    --blue:     #1D4ED8;
+    --blue-lt:  #EFF4FF;
+    --amber:    #B45309;
+    --amber-lt: #FEF3C7;
+    --muted:    #6B7280;
+    --border:   #E5E7EB;
+    --mono:     'JetBrains Mono', monospace;
+    --sans:     'Inter', sans-serif;
+    --display:  'Space Grotesk', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--navy);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 99;
+    background: rgba(244,246,251,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 54px;
+  }
+  .nav-left { display: flex; align-items: center; gap: 10px; }
+  .nav-name { font-family: var(--display); font-weight: 600; font-size: 0.9rem; color: var(--navy); }
+  .nav-course { font-size: 0.8rem; color: var(--muted); }
+  .nav-sep { color: var(--border); }
+  .nav-right { display: flex; gap: 16px; align-items: center; }
+  .nav-link { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color .15s; }
+  .nav-link:hover { color: var(--blue); }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 1100px; margin: 0 auto;
+    padding: 5rem 2rem 3.5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: .08em;
+    color: var(--blue); text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .hero-title {
+    font-family: var(--display); font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700; line-height: 1.15; color: var(--navy); margin-bottom: 1.2rem;
+  }
+  .hero-title span { color: var(--blue); }
+  .hero-desc {
+    font-size: 1rem; line-height: 1.7; color: #374151; margin-bottom: 2rem;
+  }
+  .hero-equation {
+    background: var(--navy); border-radius: 10px;
+    padding: 1.1rem 1.4rem; margin-bottom: 2rem;
+    font-family: var(--mono); font-size: 0.82rem; line-height: 1.9;
+  }
+  .eq-comment { color: #6B8CAE; }
+  .eq-code    { color: #93C5FD; }
+  .eq-accent  { color: #FCD34D; }
+  .eq-label {
+    display: inline-block; margin-top: .5rem;
+    font-family: var(--sans); font-size: 0.7rem;
+    color: #64748B; letter-spacing: .05em; text-transform: uppercase;
+  }
+  .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: 7px; font-size: 0.875rem;
+    font-weight: 500; text-decoration: none; cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: #1e40af; }
+  .btn-ghost { background: var(--surface); color: var(--navy); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+  .hero-visual { position: relative; }
+  .screenshot-frame {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(10,22,40,0.12);
+    position: relative;
+  }
+  .screenshot-frame img { width: 100%; display: block; }
+  .screenshot-overlay {
+    position: absolute; inset: 0; background: rgba(10,22,40,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    border-radius: 12px;
+  }
+  .screenshot-frame:hover .screenshot-overlay { background: rgba(10,22,40,0.55); }
+  .overlay-btn {
+    opacity: 0; transform: translateY(6px);
+    background: #fff; color: var(--navy);
+    padding: 10px 22px; border-radius: 6px;
+    font-weight: 600; font-size: 0.85rem; text-decoration: none;
+    transition: all .2s;
+  }
+  .screenshot-frame:hover .overlay-btn { opacity: 1; transform: translateY(0); }
+
+  /* ── SECTION WRAPPER ── */
+  .section { max-width: 1100px; margin: 0 auto; padding: 3.5rem 2rem; }
+  .section-eyebrow {
+    font-family: var(--mono); font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: .1em;
+    color: var(--blue); margin-bottom: .5rem;
+  }
+  .section-title {
+    font-family: var(--display); font-size: 1.6rem;
+    font-weight: 700; color: var(--navy); margin-bottom: 0.4rem;
+  }
+  .section-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 2.2rem; }
+  .divider { border: none; border-top: 1px solid var(--border); }
+
+  /* ── INTERACTIVE CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 1.25rem;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+    transition: box-shadow .2s, border-color .2s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { box-shadow: 0 8px 30px rgba(10,22,40,0.1); border-color: #CBD5E1; }
+  .card-img { position: relative; overflow: hidden; }
+  .card-img img { width: 100%; display: block; height: 200px; object-fit: cover; object-position: top; }
+  .card-img-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,22,40,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+  }
+  .card-img:hover .card-img-overlay { background: rgba(10,22,40,0.5); }
+  .card-img:hover .overlay-btn { opacity: 1; transform: translateY(0); }
+  .card-body { padding: 1rem 1.1rem 1.2rem; flex: 1; display: flex; flex-direction: column; }
+  .card-tag {
+    display: inline-block; font-family: var(--mono);
+    font-size: 0.65rem; font-weight: 500; letter-spacing: .06em;
+    text-transform: uppercase; padding: 2px 8px;
+    background: var(--blue-lt); color: var(--blue);
+    border-radius: 4px; margin-bottom: 8px;
+  }
+  .card-tag.amber { background: var(--amber-lt); color: var(--amber); }
+  .card-title { font-family: var(--display); font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+  .card-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; flex: 1; margin-bottom: 14px; }
+  .card-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.82rem; font-weight: 500; color: var(--blue);
+    text-decoration: none; transition: gap .15s;
+  }
+  .card-link:hover { gap: 9px; }
+
+  /* ── TOPIC LIST ── */
+  .topic-list { display: flex; flex-direction: column; gap: 0; }
+  .topic-row {
+    display: grid; grid-template-columns: 3rem 1fr auto;
+    align-items: center; gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-row:last-child { border-bottom: none; }
+  .topic-num {
+    font-family: var(--mono); font-size: 0.75rem;
+    color: var(--muted); text-align: right;
+  }
+  .topic-name { font-family: var(--display); font-size: 0.95rem; font-weight: 500; }
+  .topic-meta { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+  .topic-badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .badge {
+    font-family: var(--mono); font-size: 0.62rem;
+    padding: 2px 7px; border-radius: 4px; letter-spacing: .04em;
+  }
+  .badge-html { background: #EEF2FF; color: #4338CA; }
+  .badge-pdf  { background: #FEF3C7; color: #92400E; }
+  .badge-java { background: #ECFDF5; color: #065F46; }
+  .badge-star { background: var(--blue-lt); color: var(--blue); }
+
+  /* ── CONTEXT ── */
+  .context-box {
+    background: var(--navy); border-radius: 12px;
+    padding: 2.5rem 3rem; margin-top: 1rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+  }
+  .context-title {
+    font-family: var(--display); font-size: 1.3rem;
+    font-weight: 600; color: #F9FAFB; margin-bottom: 0.8rem;
+  }
+  .context-text { font-size: 0.875rem; line-height: 1.75; color: #9CA3AF; }
+  .context-text strong { color: #E5E7EB; }
+  .mapping-list { display: flex; flex-direction: column; gap: 10px; }
+  .mapping-row {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.82rem;
+  }
+  .map-java  { font-family: var(--mono); color: #93C5FD; min-width: 120px; }
+  .map-arrow { color: #4B5563; }
+  .map-eng   { color: #D1D5DB; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); margin-top: 4rem;
+    padding: 2rem; text-align: center;
+    font-size: 0.8rem; color: var(--muted);
+  }
+  footer a { color: var(--blue); text-decoration: none; }
+
+  @media (max-width: 700px) {
+    .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 1.25rem 2rem; }
+    .hero-visual { order: -1; }
+    .context-box { grid-template-columns: 1fr; padding: 1.75rem; gap: 1.5rem; }
+    .section { padding: 2.5rem 1.25rem; }
+    .topic-row { grid-template-columns: 2rem 1fr; }
+    .topic-badges { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <span class="nav-name">Ahmed Farid Elsheikh</span>
+    <span class="nav-sep">·</span>
+    <span class="nav-course">CSE141 Teaching Materials</span>
+  </div>
+  <div class="nav-right">
+    <a class="nav-link" href="#interactive">Interactive</a>
+    <a class="nav-link" href="#topics">Topics</a>
+    <a class="nav-link" href="https://github.com/AhmedFaridElsheikh/teaching_materials" target="_blank">GitHub ↗</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">CSE141 · Mansoura University · 2026</div>
+    <h1 class="hero-title">Java taught through<br><span>circuit analysis</span></h1>
+    <p class="hero-desc">
+      Programming materials for electrical power engineering students —
+      where every example maps directly to something they already study.
+    </p>
+    <div class="hero-equation">
+      <div class="eq-comment">// RLC step response — state-space + Euler integration</div>
+      <div class="eq-code">double[][] A = { {<span class="eq-accent">0</span>, <span class="eq-accent">1.0/C</span>}, {<span class="eq-accent">-1.0/L</span>, <span class="eq-accent">-R/L</span>} };</div>
+      <div class="eq-code">vC += dt * (<span class="eq-accent">x[1]</span> / C);</div>
+      <span class="eq-label">→ same method used in EMTP for power systems simulation</span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#interactive">View interactive materials</a>
+      <a class="btn btn-ghost" href="https://github.com/AhmedFaridElsheikh/teaching_materials" target="_blank">GitHub ↗</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="screenshot-frame">
+      <img src="./docs/screenshots/java_for_power_engineers.png" alt="Java for Power Engineers interactive reference">
+      <div class="screenshot-overlay">
+        <a class="overlay-btn" href="./04-arrays/java_for_power_engineers.html" target="_blank">Open interactive ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- INTERACTIVE MATERIALS -->
+<section class="section" id="interactive">
+  <div class="section-eyebrow">Interactive Materials</div>
+  <h2 class="section-title">Course Materials</h2>
+  <p class="section-sub">Click any card to open — interactive HTML pages open in browser, PDF opens in viewer</p>
+
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-img">
+        <img src="./docs/screenshots/java_presentation.png" alt="Introduction to Java slides">
+        <div class="card-img-overlay">
+          <a class="overlay-btn" href="./01-introduction/java_presentation.pdf" target="_blank">Open ↗</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <span class="card-tag" style="background:#F0FDF4;color:#166534;">LaTeX · 11 Slides</span>
+        <div class="card-title">Introduction to Java</div>
+        <div class="card-desc">Environment, IDEs, and Getting Started. Covers JDK setup, environment variables, IDE comparison (IntelliJ, Eclipse, VS Code), first program, project structure, and best practices.</div>
+        <a class="card-link" href="./01-introduction/java_presentation.pdf" target="_blank">Open PDF ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img">
+        <img src="./docs/screenshots/java_for_power_engineers.png" alt="Java for Power Engineers">
+        <div class="card-img-overlay">
+          <a class="overlay-btn" href="./04-arrays/java_for_power_engineers.html" target="_blank">Open ↗</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Engineering Reference</span>
+        <div class="card-title">Java for Power Engineers</div>
+        <div class="card-desc">5 tabbed sections mapping Java to the student's domain: Math library → RC source-free → Nodal analysis → Step functions → State-space simulation with Forward Euler.</div>
+        <a class="card-link" href="./04-arrays/java_for_power_engineers.html" target="_blank">Open interactive ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img">
+        <img src="./docs/screenshots/java_loop_control.png" alt="Loop Control">
+        <div class="card-img-overlay">
+          <a class="overlay-btn" href="./05-data-structures/java-loop-control.html" target="_blank">Open ↗</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Problems + Flowcharts</span>
+        <div class="card-title">Loop Control — break & continue</div>
+        <div class="card-desc">Four engineering-context problems with embedded SVG flowcharts. Introduces the Three-Question Rule: STOP? → break · SKIP? → continue · DO? → logic.</div>
+        <a class="card-link" href="./05-data-structures/java-loop-control.html" target="_blank">Open interactive ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img">
+        <img src="./docs/screenshots/java_iterations.png" alt="Iterations">
+        <div class="card-img-overlay">
+          <a class="overlay-btn" href="./03-iterations/Java_Iterations_Section.html" target="_blank">Open ↗</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Practice Sheet</span>
+        <div class="card-title">Iterations Section</div>
+        <div class="card-desc">for · while · do-while · nested loops. Four examples, two exercises, one challenge. Each with show/hide solution and a key insight explanation.</div>
+        <a class="card-link" href="./03-iterations/Java_Iterations_Section.html" target="_blank">Open interactive ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img">
+        <img src="./docs/screenshots/java_array_exercises.png" alt="Array Exercises">
+        <div class="card-img-overlay">
+          <a class="overlay-btn" href="./04-arrays/java_array_exercises.html" target="_blank">Open ↗</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Exercises</span>
+        <div class="card-title">Array Exercises</div>
+        <div class="card-desc">Easy → Medium exercises with starter code, collapsible hints, and full solutions. All use a single main method — no prior knowledge of methods required.</div>
+        <a class="card-link" href="./04-arrays/java_array_exercises.html" target="_blank">Open interactive ↗</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img">
+        <img src="./docs/screenshots/bonus_task.png" alt="Bonus Task">
+        <div class="card-img-overlay">
+          <a class="overlay-btn" href="./08-bonus-task/bonus_task.html" target="_blank">Open ↗</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <span class="card-tag amber">Assignment</span>
+        <div class="card-title">Power Consumption Analyzer</div>
+        <div class="card-desc">24-hour voltage and current logger using arrays. Students compute P = V × I for each hour, flag high-consumption periods, and print a full energy report.</div>
+        <a class="card-link" href="./08-bonus-task/bonus_task.html" target="_blank">Open interactive ↗</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TEACHING APPROACH -->
+<section class="section">
+  <div class="section-eyebrow">Teaching Approach</div>
+  <h2 class="section-title">Visualization over explanation</h2>
+  <p class="section-sub">Abstract concepts taught with live tools — not just slides</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+
+    <div class="card">
+      <div class="card-img" style="background:#fff;">
+        <img src="./docs/screenshots/tool_pythontutor_2darray.png"
+             alt="Python Tutor 2D array visualization"
+             style="height:240px;object-fit:contain;padding:8px;background:#fff;">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">Python Tutor · pythontutor.com</span>
+        <div class="card-title">2D Array Memory Layout</div>
+        <div class="card-desc">
+          Used live in class to show students how <code style="font-family:var(--mono);font-size:0.8rem;background:#F3F4F6;padding:1px 5px;border-radius:3px;">int[][] X</code> maps to memory —
+          rows, column indices (0,0), (0,1)... and the pointer from the variable to the array object.
+          Students could paste their own code and step through execution.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img" style="background:#1a0a2e;">
+        <img src="./docs/screenshots/tool_jshell_array_init.png"
+             alt="JShell array initialization demo"
+             style="height:240px;object-fit:contain;padding:8px;background:#1a0a2e;">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">JShell · Java Interactive REPL</span>
+        <div class="card-title">Array Default Initialization</div>
+        <div class="card-desc">
+          Demonstrated interactively that <code style="font-family:var(--mono);font-size:0.8rem;background:#F3F4F6;padding:1px 5px;border-radius:3px;">int[] x</code> starts as <code style="font-family:var(--mono);font-size:0.8rem;background:#F3F4F6;padding:1px 5px;border-radius:3px;">null</code> before allocation,
+          and becomes <code style="font-family:var(--mono);font-size:0.8rem;background:#F3F4F6;padding:1px 5px;border-radius:3px;">{0,0,0,0,0}</code> after <code style="font-family:var(--mono);font-size:0.8rem;background:#F3F4F6;padding:1px 5px;border-radius:3px;">new int[5]</code>.
+          Students ran it themselves in real time — no waiting to compile a full class.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TOPICS -->
+<section class="section" id="topics">
+  <div class="section-eyebrow">Course Structure</div>
+  <h2 class="section-title">8 sections</h2>
+  <p class="section-sub">Each section leads to the next — operators before loops, loops before data structures, data structures before the engineering applications.</p>
+
+  <div class="topic-list">
+    <div class="topic-row">
+      <span class="topic-num">01</span>
+      <div>
+        <div class="topic-name">Introduction</div>
+        <div class="topic-meta">JDK setup · HelloWorld · user input · IDE overview</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-pdf">PDF</span>
+        <span class="badge badge-java">Java</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">02</span>
+      <div>
+        <div class="topic-name">Operators & If-Else</div>
+        <div class="topic-meta">4-step problem-solving framework · arithmetic · comparison · logical · teaching guide with common mistakes</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-pdf">PDF</span>
+        <span class="badge badge-java">6 Java</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">03</span>
+      <div>
+        <div class="topic-name">Iterations</div>
+        <div class="topic-meta">for · while · do-while · nested · prime number challenge</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-html">Interactive</span>
+        <span class="badge badge-pdf">PDF</span>
+        <span class="badge badge-java">7 Java</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">04</span>
+      <div>
+        <div class="topic-name">Arrays</div>
+        <div class="topic-meta">Array operations · engineering reference with impedance, RC, nodal analysis, state-space</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-html">2 Interactive</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">05</span>
+      <div>
+        <div class="topic-name">Data Structures + Loop Control</div>
+        <div class="topic-meta">ArrayList · Stack · Hashtable · Enum · break & continue with SVG flowcharts</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-html">Interactive</span>
+        <span class="badge badge-pdf">PDF</span>
+        <span class="badge badge-java">9 Java</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">06</span>
+      <div>
+        <div class="topic-name">Floating Point</div>
+        <div class="topic-meta">IEEE 754 · NaN · Infinity · precision loss · integer division traps</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-java">Java</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">07</span>
+      <div>
+        <div class="topic-name">Engineering Applications ⚡</div>
+        <div class="topic-meta">RC discharge · RLC step response (state-space + Euler) · quadratic equation solver</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-star">Engineering</span>
+        <span class="badge badge-java">3 Java</span>
+      </div>
+    </div>
+    <div class="topic-row">
+      <span class="topic-num">08</span>
+      <div>
+        <div class="topic-name">Bonus Task</div>
+        <div class="topic-meta">Power Consumption Analyzer — arrays, methods, formatted output</div>
+      </div>
+      <div class="topic-badges">
+        <span class="badge badge-html">Interactive</span>
+        <span class="badge badge-pdf">PDF</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEXT -->
+<section class="section">
+  <div class="context-box">
+    <div>
+      <div class="context-title">Why the examples look like circuits</div>
+      <p class="context-text">
+        These students take <strong>power electronics and circuit analysis</strong> in the same year they take this programming course. Using generic examples — bank accounts, to-do lists — would have worked, but would have missed the opportunity to show them that the tools they're learning connect directly to the engineering they already care about.
+        <br><br>
+        The RLC simulation uses the same numerical method (Forward Euler) that MATLAB and EMTP use for power systems transient analysis. Students implement it in 40 lines of Java.
+      </p>
+    </div>
+    <div>
+      <div class="mapping-list">
+        <div class="mapping-row">
+          <span class="map-java">Math.sqrt, atan2</span>
+          <span class="map-arrow">→</span>
+          <span class="map-eng">Impedance magnitude & phase</span>
+        </div>
+        <div class="mapping-row">
+          <span class="map-java">double[], loops</span>
+          <span class="map-arrow">→</span>
+          <span class="map-eng">RC discharge v(t) = V₀e^(-t/RC)</span>
+        </div>
+        <div class="mapping-row">
+          <span class="map-java">2D arrays</span>
+          <span class="map-arrow">→</span>
+          <span class="map-eng">Nodal analysis matrix (Cramer's rule)</span>
+        </div>
+        <div class="mapping-row">
+          <span class="map-java">Euler integration</span>
+          <span class="map-arrow">→</span>
+          <span class="map-eng">RLC state-space simulation</span>
+        </div>
+        <div class="mapping-row">
+          <span class="map-java">ArrayList + Stack</span>
+          <span class="map-arrow">→</span>
+          <span class="map-eng">Exam score processor (real grading)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Ahmed Farid Elsheikh ·
+  <a href="https://www.linkedin.com/in/ahmed-farid-elsheikh/" target="_blank">LinkedIn</a> ·
+  <a href="https://github.com/AhmedFaridElsheikh" target="_blank">GitHub</a>
+</footer>
+
+</body>
+</html>

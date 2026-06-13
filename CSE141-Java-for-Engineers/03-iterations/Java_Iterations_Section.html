@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Iterations — Section Practice</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6f9;
+    color: #1a1a18;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: #1a1a18;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+  }
+
+  .subtitle code {
+    background: #eee;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #444;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .badge-example { background: #E6F1FB; color: #185FA5; }
+  .badge-exercise { background: #E1F5EE; color: #0F6E56; }
+  .badge-challenge { background: #FAECE7; color: #993C1D; }
+  .badge-loop { background: #EEEDFE; color: #3C3489; }
+
+  .card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a18;
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    font-size: 0.92rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .card p em {
+    color: #185FA5;
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  pre {
+    background: #f5f4f0;
+    border: 1px solid #e2e2e2;
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-bottom: 0.75rem;
+    white-space: pre;
+  }
+
+  .output-box {
+    background: #f5f4f0;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+    border: 1px solid #e2e2e2;
+  }
+
+  .output-label {
+    font-size: 0.75rem;
+    color: #888;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin-bottom: 4px;
+  }
+
+  .note {
+    background: #f0f7ff;
+    border-left: 3px solid #378ADD;
+    border-radius: 0 8px 8px 0;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+    color: #2c5282;
+    line-height: 1.6;
+  }
+
+  .note strong { color: #185FA5; }
+
+  .challenge-note {
+    background: #fff8f0;
+    border-left: 3px solid #D85A30;
+    border-radius: 0 8px 8px 0;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+    color: #7a3010;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .think-list {
+    padding-left: 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .think-list li {
+    font-size: 0.9rem;
+    color: #712B13;
+    line-height: 1.9;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #e2e2e2;
+    margin: 1rem 0;
+  }
+
+  .btn-show {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #444;
+    transition: all 0.15s;
+    margin-top: 0.25rem;
+  }
+
+  .btn-show:hover { background: #f5f5f5; border-color: #aaa; }
+  .btn-show.open { background: #E1F5EE; border-color: #1D9E75; color: #0F6E56; }
+  .btn-show.challenge-open { background: #FAECE7; border-color: #D85A30; color: #993C1D; }
+
+  .btn-arrow { transition: transform 0.2s; display: inline-block; }
+  .btn-show.open .btn-arrow,
+  .btn-show.challenge-open .btn-arrow { transform: rotate(180deg); }
+
+  .solution-box {
+    display: none;
+    margin-top: 1rem;
+    border-top: 1px dashed #ccc;
+    padding-top: 1rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .solution-box.visible { display: block; }
+
+  .sol-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #0F6E56;
+    margin-bottom: 0.5rem;
+  }
+
+  .sol-label-challenge { color: #993C1D; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  hr.section-divider {
+    border: none;
+    border-top: 2px solid #e2e2e2;
+    margin: 2.5rem 0 1.5rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Java Iterations — Section Practice</h1>
+  <p class="subtitle">
+    <code>for</code> &nbsp;·&nbsp; <code>while</code> &nbsp;·&nbsp;
+    <code>do-while</code> &nbsp;·&nbsp; <code>nested loops</code>
+  </p>
+
+  <!-- ═══════════════════════════════════════════
+       EXAMPLE 1
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-example">Example 1</span>
+      <span class="badge badge-loop">for loop</span>
+    </div>
+    <h2>Print numbers from 1 to 10</h2>
+    <p>Write a Java program to print numbers from 1 to 10.</p>
+    <button class="btn-show" onclick="toggleSolution(this, 'sol1')">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="sol1">
+      <div class="sol-label">Solution</div>
+      <pre>for (int i = 1; i &lt;= 10; i++) {
+    System.out.println(i);
+}</pre>
+      <div class="output-box">
+        <div class="output-label">Output:</div>
+        1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong> <code>i</code> starts at 1 → runs while <code>i &lt;= 10</code> → increments by 1 each step.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       EXAMPLE 2
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-example">Example 2</span>
+      <span class="badge badge-loop">nested for loops</span>
+    </div>
+    <h2>Print the multiplication table</h2>
+    <p>Write a Java program to calculate and print the multiplication table (1 to 10).</p>
+    <button class="btn-show" onclick="toggleSolution(this, 'sol2')">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="sol2">
+      <div class="sol-label">Solution</div>
+      <pre>for (int i = 1; i &lt;= 10; i++) {
+    for (int j = 1; j &lt;= 10; j++) {
+        System.out.print(i + " x " + j + " = " + (i * j) + "\t");
+    }
+    System.out.println();
+}</pre>
+      <div class="output-box">
+        <div class="output-label">Output (first 2 rows):</div>
+        1 x 1 = 1 &nbsp;&nbsp; 1 x 2 = 2 &nbsp;&nbsp; 1 x 3 = 3 &nbsp;&nbsp; ...<br>
+        2 x 1 = 2 &nbsp;&nbsp; 2 x 2 = 4 &nbsp;&nbsp; 2 x 3 = 6 &nbsp;&nbsp; ...
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong> Outer loop controls the row (<code>i</code>), inner loop controls the column (<code>j</code>). <code>\t</code> adds a tab for neat spacing.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       EXAMPLE 3
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-example">Example 3</span>
+      <span class="badge badge-loop">while loop</span>
+    </div>
+    <h2>Print numbers from 1 to 5 using while</h2>
+    <p>Write a Java program to print numbers from 1 to 5 using a <code>while</code> loop.</p>
+    <button class="btn-show" onclick="toggleSolution(this, 'sol3')">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="sol3">
+      <div class="sol-label">Solution</div>
+      <pre>int i = 1;
+while (i &lt;= 5) {
+    System.out.println(i);
+    i++;
+}</pre>
+      <div class="output-box">
+        <div class="output-label">Output:</div>
+        1<br>2<br>3<br>4<br>5
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong> Initialize outside → check condition at the top → update inside the body. Forget <code>i++</code> = infinite loop!
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       EXAMPLE 5 — do-while
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-example">Example 4</span>
+      <span class="badge badge-loop">do-while loop</span>
+    </div>
+    <h2>Keep asking until the user enters an even number</h2>
+    <p>Write a Java program that keeps asking the user to enter a number until they enter an <strong>even</strong> number, then prints it.</p>
+    <button class="btn-show" onclick="toggleSolution(this, 'sol5')">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="sol5">
+      <div class="sol-label">Solution</div>
+      <pre>Scanner sc = new Scanner(System.in);
+int n;
+
+do {
+    System.out.print("Enter an even number: ");
+    n = sc.nextInt();
+} while (n % 2 != 0);
+
+System.out.println("You entered: " + n);</pre>
+      <div class="output-box">
+        <div class="output-label">Example run:</div>
+        Enter an even number: 3<br>
+        Enter an even number: 7<br>
+        Enter an even number: 4<br>
+        You entered: 4
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong> <code>do-while</code> always runs the body at least once — perfect when you must ask before you can check.
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       EXERCISE 1 — sum of digits
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-exercise">Exercise 1</span>
+      <span class="badge badge-loop">while loop</span>
+    </div>
+    <h2>Compute the sum of digits of an integer</h2>
+    <p>Write a Java program to compute the sum of the digits in an integer.</p>
+    <p><em>Example: 1234 → 1 + 2 + 3 + 4 = 10</em></p>
+    <button class="btn-show" onclick="toggleSolution(this, 'sol4')">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="sol4">
+      <div class="sol-label">Solution</div>
+      <pre>Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();
+int sum = 0;
+
+while (n > 0) {
+    sum += n % 10;  // extract last digit
+    n /= 10;        // remove last digit
+}
+
+System.out.println("Sum of digits = " + sum);</pre>
+      <div class="output-box">
+        <div class="output-label">Example — Input: 1234</div>
+        Sum of digits = 10
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong><br>
+        • <code>n % 10</code> gives the last digit &nbsp;(1234 % 10 = 4)<br>
+        • <code>n / 10</code> removes the last digit &nbsp;(1234 / 10 = 123)<br>
+        • Repeat until <code>n</code> becomes 0
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       EXERCISE 2 — factorial
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-exercise">Exercise 2</span>
+      <span class="badge badge-loop">for loop</span>
+    </div>
+    <h2>Calculate N! (Factorial)</h2>
+    <p>Write a Java program to read a number N and print its factorial.</p>
+    <p><em>Example: 5! = 5 × 4 × 3 × 2 × 1 = 120</em></p>
+    <button class="btn-show" onclick="toggleSolution(this, 'sol6')">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="sol6">
+      <div class="sol-label">Solution</div>
+      <pre>Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();
+long result = 1;
+
+for (int i = 1; i &lt;= n; i++) {
+    result *= i;
+}
+
+System.out.println(n + "! = " + result);</pre>
+      <div class="output-box">
+        <div class="output-label">Example — Input: 6</div>
+        6! = 720
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong> Use an accumulator <code>result = 1</code> and multiply by <code>i</code> each step — same idea as summing, but with <code>*=</code>.
+        Use <code>long</code> not <code>int</code> because factorials grow very fast (<code>13!</code> exceeds <code>int</code> max).
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ═══════════════════════════════════════════
+       CHALLENGE
+  ═══════════════════════════════════════════ -->
+  <div class="card">
+    <div class="card-header">
+      <span class="badge badge-challenge">Challenge 🔥</span>
+      <span class="badge badge-loop">nested loops</span>
+      <span class="badge badge-loop">while</span>
+    </div>
+    <h2>Find all prime numbers up to N</h2>
+    <p>Write a Java program that reads a number N and prints all <strong>prime numbers</strong> from 2 to N.</p>
+    <div class="output-box">
+      <div class="output-label">Expected output — Input: 20</div>
+      2 &nbsp; 3 &nbsp; 5 &nbsp; 7 &nbsp; 11 &nbsp; 13 &nbsp; 17 &nbsp; 19
+    </div>
+    <div class="challenge-note">
+      <strong>Think about:</strong><br>
+      1. How do you check if a single number is prime? <em>(hint: try dividing it by all numbers from 2 to itself−1)</em><br>
+      2. You will need a loop <strong>inside</strong> a loop — what does each one do?<br>
+      3. When can you stop the inner loop early?<br>
+      4. How do you use a <code>boolean</code> flag to track whether a number is prime?<br>
+      5. <strong>Bonus:</strong> Can you rewrite the inner check using a <code>while</code> loop instead of <code>for</code>?
+    </div>
+    <button class="btn-show" onclick="toggleSolution(this, 'solC', true)">
+      Show Solution <span class="btn-arrow">▾</span>
+    </button>
+    <div class="solution-box" id="solC">
+      <div class="sol-label sol-label-challenge">Solution</div>
+      <pre>Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();
+
+for (int i = 2; i &lt;= n; i++) {
+    boolean isPrime = true;
+
+    for (int j = 2; j &lt; i; j++) {
+        if (i % j == 0) {
+            isPrime = false;
+            break;  // no need to keep checking
+        }
+    }
+
+    if (isPrime) {
+        System.out.print(i + " ");
+    }
+}
+System.out.println();</pre>
+      <div class="output-box">
+        <div class="output-label">Output — Input: 20</div>
+        2 3 5 7 11 13 17 19
+      </div>
+      <div class="note">
+        <strong>Key idea:</strong> For each number <code>i</code>, assume it is prime (<code>isPrime = true</code>).
+        Try dividing by every <code>j</code> from 2 to <code>i-1</code> — if any division has no remainder, it is not prime.
+        <code>break</code> exits the inner loop early once we know it is not prime.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleSolution(btn, id, isChallenge) {
+  var box = document.getElementById(id);
+  var isOpen = box.classList.contains('visible');
+  if (isOpen) {
+    box.classList.remove('visible');
+    btn.classList.remove('open', 'challenge-open');
+    btn.childNodes[0].textContent = 'Show Solution ';
+  } else {
+    box.classList.add('visible');
+    if (isChallenge) {
+      btn.classList.add('challenge-open');
+    } else {
+      btn.classList.add('open');
+    }
+    btn.childNodes[0].textContent = 'Hide Solution ';
+  }
+}
+</script>
+</body>
+</html>

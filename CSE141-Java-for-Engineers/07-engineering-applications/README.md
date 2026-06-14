@@ -19,7 +19,7 @@ Uses state-space representation:
 
 Integrates with the **Euler method**: x_new = x_old + (dx/dt) · Δt
 
-This is the same approach used in MATLAB/Simulink — just written from scratch in Java using 1D and 2D arrays.
+This is the same approach used in MATLAB/Simulink — implemented in Java using 1D and 2D arrays.
 
 ## QuadraticEquation.java
 Solves ax² + bx + c = 0 using the quadratic formula.

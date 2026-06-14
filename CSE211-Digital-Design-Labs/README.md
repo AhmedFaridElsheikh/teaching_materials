@@ -12,6 +12,7 @@ This course was entirely practical — students built and tested real circuits o
 
 | # | Circuit | IC | Video | Photo |
 |---|---------|-----|-------|-------|
+| [Intro](./intro/) | Number Representation in C | — | — | — |
 | [Lab 1](./lab-1-sr-latch/) | SR Latch | NOR / NAND gates | ✓ | — |
 | [Lab 2](./lab-2-555-timer/) | 555 Timer Square Wave | LM555 | ✓ | ✓ |
 | [Lab 3](./lab-3-4bit-parallel-register/) | 4-Bit Parallel Register | 74HC175 | ✓ | — |
@@ -39,7 +40,9 @@ All IC datasheets in [`/datasheets`](./datasheets/)
 
 ## Credits
 
-Lab circuits demonstrated following the work of **Eng. Aya Adel**, Teaching Assistant, Mansoura University.
+**Eng. Aya Adel** — Teaching Assistant, Mansoura University.
+
+**Ben Eater** and **Walid Issa** — whose educational content the circuit demonstrations follow.
 
 ---
 

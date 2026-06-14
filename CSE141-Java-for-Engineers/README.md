@@ -49,7 +49,7 @@ Teaching materials for **CSE141: Introduction to Programming Languages**, taught
 | 02 | [Operators & If-Else](./02-operators/) | Teaching guide PDF · 6 demo files |
 | 03 | [Iterations](./03-iterations/) | Interactive HTML · PDF · Examples · Exercises · Challenge |
 | 04 | [Arrays](./04-arrays/) | Exercises HTML · Power Engineers reference HTML |
-| 05 | [Data Structures + Loop Control](./05-data-structures/) | Interactive HTML with flowcharts · PDF · 9 source files |
+| 05 | [Data Structures + Loop Control](./05-data-structures/) | Interactive HTML with flowcharts · PDF · 8 source files |
 | 06 | [Floating Point](./06-floating-point/) | IEEE 754 edge cases |
 | 07 | [Engineering Applications ⚡](./07-engineering-applications/) | RC circuit · RLC step response · Quadratic solver |
 | 08 | [Bonus Task](./08-bonus-task/) | Assignment PDF + HTML |

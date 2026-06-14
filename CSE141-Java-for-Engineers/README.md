@@ -81,6 +81,6 @@ java RLCStepResponse
 
 Requires **Java 11+**. Each file is standalone — no build tool needed.
 
-## Reference Book
+## Learning Resources
 
 *Think Java* by Allen Downey & Chris Mayfield — free at [greenteapress.com](https://greenteapress.com/wp/think-java-2e/)

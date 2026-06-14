@@ -2,7 +2,7 @@
 
 Lab materials for **CSE211: Digital Design 2**, taught to computer and communication engineering students at Mansoura University.
 
-This course was entirely practical — students built and tested real circuits on breadboards. Each lab folder contains a circuit explanation, wiring guide, demo video, and where available a photo of the build.
+Students built and tested real circuits on breadboards. Each lab folder contains a circuit explanation, wiring guide, demo video, and where available a photo of the build.
 
 > **Note:** The circuits demonstrated in these labs follow educational content by [Ben Eater](https://www.youtube.com/playlist?list=PLowKtXNTBypGqImE405J2565dvjafglHU) and [Walid Issa](https://www.youtube.com/playlist?list=PLww54WQ2wa5obq6IbRbIiql8oHaTUp3T_). This repo documents the classroom demonstrations — videos, photos, and circuit notes from the lab sessions.
 

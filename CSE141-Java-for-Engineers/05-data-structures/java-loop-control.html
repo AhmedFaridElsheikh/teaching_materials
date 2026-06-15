@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Java Loop Control — break &amp; continue</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:       #ffffff;
+    --surface:  #f8f9fb;
+    --surface2: #f0f2f6;
+    --border:   #e2e6ed;
+    --border2:  #c8cfd9;
+    --red:      #c0392b;
+    --red-bg:   #fdf2f0;
+    --red-bd:   #f5c6c0;
+    --teal:     #0e7c72;
+    --teal-bg:  #f0faf9;
+    --teal-bd:  #b2deda;
+    --violet:   #5b3fbe;
+    --violet-bg:#f4f1fd;
+    --violet-bd:#c9bef5;
+    --amber:    #92600a;
+    --amber-bg: #fdf8ee;
+    --amber-bd: #f0d9a0;
+    --text:     #1a1d23;
+    --text2:    #4a5568;
+    --text3:    #8a96a8;
+    --code-bg:  #f5f7fa;
+    --code-bd:  #e2e6ed;
+    --radius:   10px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .top-stripe {
+    height: 5px;
+    background: linear-gradient(90deg, var(--red) 0%, var(--violet) 50%, var(--teal) 100%);
+  }
+  .hero {
+    padding: 56px 40px 44px;
+    max-width: 920px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+    letter-spacing: -.02em;
+  }
+  .hero h1 span { color: var(--violet); }
+  .hero p {
+    margin-top: 14px;
+    font-size: 16px;
+    color: var(--text2);
+    max-width: 560px;
+    line-height: 1.65;
+  }
+  .legend {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--text2);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px 4px 8px;
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .section {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 52px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.015em;
+    margin-bottom: 10px;
+  }
+  .problem-text {
+    font-size: 15px;
+    color: var(--text2);
+    margin-bottom: 28px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--violet);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    line-height: 1.65;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+    align-items: start;
+  }
+  @media (max-width: 680px) { .two-col { grid-template-columns: 1fr; } }
+  .think-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    height: 100%;
+  }
+  .think-card h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 16px;
+  }
+  .think-step {
+    display: flex;
+    gap: 11px;
+    margin-bottom: 12px;
+    font-size: 13.5px;
+    color: var(--text2);
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .think-step .q {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    min-width: 58px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 1px;
+    flex-shrink: 0;
+    letter-spacing: .03em;
+  }
+  .q-stop   { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red-bd); }
+  .q-skip   { background: var(--teal-bg);   color: var(--teal);   border: 1px solid var(--teal-bd); }
+  .q-do     { background: var(--violet-bg); color: var(--violet); border: 1px solid var(--violet-bd); }
+  .q-data   { background: var(--amber-bg);  color: var(--amber);  border: 1px solid var(--amber-bd); }
+  .flow-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    overflow-x: auto;
+  }
+  .flow-wrap h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+  .code-wrap {
+    background: var(--code-bg);
+    border: 1px solid var(--code-bd);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--code-bd);
+    background: var(--surface2);
+  }
+  .code-header span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+  }
+  .code-dots { display: flex; gap: 6px; }
+  .code-dots i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .cd1{background:#ff5f57;} .cd2{background:#febc2e;} .cd3{background:#28c840;}
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    padding: 20px 22px;
+    overflow-x: auto;
+    color: #2d3748;
+  }
+  .kw  { color: #5b3fbe; font-weight: 600; }
+  .typ { color: #0e7c72; font-weight: 600; }
+  .num { color: #c05200; }
+  .cmt { color: #8a96a8; font-style: italic; }
+  .str { color: #2a7d3e; }
+  .op  { color: #1a6b8a; }
+  .brk { color: var(--red);    font-weight: 700; }
+  .cnt { color: var(--teal);   font-weight: 700; }
+  .psh { color: var(--violet); font-weight: 700; }
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 640px) { .three-col { grid-template-columns: 1fr; } }
+  .ref-card { border-radius: var(--radius); padding: 20px; border: 1px solid; }
+  .ref-card .rc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    margin-bottom: 10px;
+  }
+  .ref-card .rc-body { font-size: 13.5px; line-height: 1.55; margin-bottom: 14px; color: var(--text2); }
+  .ref-card .rc-code { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; }
+  .rc-stop { background: var(--red-bg);    border-color: var(--red-bd); }
+  .rc-stop .rc-label, .rc-stop .rc-code { color: var(--red); }
+  .rc-skip { background: var(--teal-bg);   border-color: var(--teal-bd); }
+  .rc-skip .rc-label, .rc-skip .rc-code { color: var(--teal); }
+  .rc-do   { background: var(--violet-bg); border-color: var(--violet-bd); }
+  .rc-do   .rc-label, .rc-do   .rc-code { color: var(--violet); }
+  footer {
+    text-align: center;
+    padding: 32px 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: .08em;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+
+<div class="hero">
+  <p class="hero-label">Java · Collections · Loops · Stack</p>
+  <h1>Loop Control —<br/><span>break &amp; continue</span></h1>
+  <p>Four problems. For each: the thinking process, the flowchart, then the code.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>break — stop loop</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>continue — skip iteration</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--violet)"></div>push — stack operation</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>data / output</div>
+</div>
+
+
+<!-- ══════════════════ PROBLEM 1 ══════════════════ -->
+<div class="section">
+  <p class="section-number">Problem 01</p>
+  <h2>Exam Score Processor</h2>
+  <p class="problem-text">Process exam scores from an ArrayList. Push passing scores (≥ 50) onto a Stack. Skip any score equal to 0 (absent student). Stop completely if a score of 100 is found.</p>
+
+  <div class="two-col">
+    <div class="think-card">
+      <h3>Think First — pen &amp; paper</h3>
+      <div class="think-step"><span class="q q-data">Data</span><span>ArrayList of ints, e.g. [72, 0, 45, 88, 55, 0, 100, 91]</span></div>
+      <div class="think-step"><span class="q q-stop">STOP?</span><span>score == 100 → <strong>break</strong> out of the loop entirely</span></div>
+      <div class="think-step"><span class="q q-skip">SKIP?</span><span>score == 0 → <strong>continue</strong> to next element</span></div>
+      <div class="think-step"><span class="q q-do">DO?</span><span>score ≥ 50 → push onto stack. Otherwise ignore.</span></div>
+      <div class="think-step"><span class="q q-data">Order</span><span>break guard first → continue guard second → logic last.</span></div>
+    </div>
+    <div class="flow-wrap">
+      <h3>Flowchart</h3>
+      <svg width="100%" viewBox="0 0 260 415" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#8a96a8" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="a-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="a-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0e7c72" stroke-width="1.5" stroke-linecap="round"/></marker>
+        </defs>
+        <rect x="70" y="10" width="120" height="32" rx="16" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="30" text-anchor="middle" font-size="11" fill="#0e7c72">next score</text>
+        <line x1="130" y1="42" x2="130" y2="60" stroke="#8a96a8" stroke-width="1" marker-end="url(#a1)"/>
+        <rect x="45" y="60" width="170" height="32" rx="6" fill="#fdf2f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="130" y="80" text-anchor="middle" font-size="11" fill="#c0392b">score == 100?</text>
+        <line x1="215" y1="76" x2="243" y2="76" stroke="#c0392b" stroke-width="1" marker-end="url(#a-red)"/>
+        <text x="218" y="71" font-size="10" fill="#c0392b">yes</text>
+        <text x="244" y="80" font-size="10" fill="#c0392b">BREAK</text>
+        <line x1="130" y1="92" x2="130" y2="110" stroke="#8a96a8" stroke-width="1" marker-end="url(#a1)"/>
+        <text x="135" y="106" font-size="10" fill="#8a96a8">no</text>
+        <rect x="45" y="110" width="170" height="32" rx="6" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="130" text-anchor="middle" font-size="11" fill="#0e7c72">score == 0?</text>
+        <path d="M215 126 L234 126 L234 26 L190 26" fill="none" stroke="#0e7c72" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a-teal)"/>
+        <text x="217" y="120" font-size="10" fill="#0e7c72">yes</text>
+        <line x1="130" y1="142" x2="130" y2="160" stroke="#8a96a8" stroke-width="1" marker-end="url(#a1)"/>
+        <text x="135" y="156" font-size="10" fill="#8a96a8">no</text>
+        <rect x="45" y="160" width="170" height="32" rx="6" fill="#f4f1fd" stroke="#5b3fbe" stroke-width="1.2"/>
+        <text x="130" y="180" text-anchor="middle" font-size="11" fill="#5b3fbe">score ≥ 50?</text>
+        <line x1="130" y1="192" x2="130" y2="210" stroke="#8a96a8" stroke-width="1" marker-end="url(#a1)"/>
+        <text x="135" y="206" font-size="10" fill="#8a96a8">yes</text>
+        <path d="M45 176 L27 176 L27 248 L68 248" fill="none" stroke="#8a96a8" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#a1)"/>
+        <text x="11" y="172" font-size="10" fill="#8a96a8">no</text>
+        <rect x="68" y="210" width="124" height="32" rx="6" fill="#f4f1fd" stroke="#5b3fbe" stroke-width="1.5"/>
+        <text x="130" y="230" text-anchor="middle" font-size="11" fill="#5b3fbe">push to stack</text>
+        <line x1="130" y1="242" x2="130" y2="260" stroke="#8a96a8" stroke-width="1" marker-end="url(#a1)"/>
+        <path d="M130 260 L130 278 L8 278 L8 26 L70 26" fill="none" stroke="#8a96a8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a1)"/>
+        <text x="14" y="274" font-size="10" fill="#8a96a8">loop</text>
+        <rect x="70" y="368" width="120" height="32" rx="16" fill="#f8f9fb" stroke="#c8cfd9" stroke-width="1.2"/>
+        <text x="130" y="388" text-anchor="middle" font-size="11" fill="#8a96a8">done</text>
+        <path d="M244 90 L244 384 L190 384" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a-red)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><div class="code-dots"><i class="cd1"></i><i class="cd2"></i><i class="cd3"></i></div><span>GradesShorter.java</span></div>
+<pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="typ">GradesShorter</span> {
+    <span class="kw">public static void</span> main(<span class="typ">String</span>[] args) {
+
+        <span class="typ">ArrayList</span>&lt;<span class="typ">Integer</span>&gt; grades = <span class="kw">new</span> <span class="typ">ArrayList</span>&lt;&gt;(
+            <span class="typ">Arrays</span>.asList(<span class="num">45</span>, <span class="num">78</span>, <span class="num">0</span>, <span class="num">92</span>, <span class="num">100</span>, <span class="num">99</span>, <span class="num">30</span>));
+
+        <span class="typ">Stack</span>&lt;<span class="typ">Integer</span>&gt; passed = <span class="kw">new</span> <span class="typ">Stack</span>&lt;&gt;();
+
+        <span class="kw">for</span> (<span class="kw">int</span> score : grades) {
+            <span class="cmt">// 1. STOP guard — always first</span>
+            <span class="kw">if</span> (score <span class="op">==</span> <span class="num">100</span>) { <span class="brk">break</span>; }
+
+            <span class="cmt">// 2. SKIP guard — always second</span>
+            <span class="kw">if</span> (score <span class="op">==</span> <span class="num">0</span>)   { <span class="cnt">continue</span>; }
+
+            <span class="cmt">// 3. LOGIC — only runs for valid, in-range scores</span>
+            <span class="kw">if</span> (score <span class="op">&gt;=</span> <span class="num">50</span>)  { passed.<span class="psh">push</span>(score); }
+        }
+
+        <span class="typ">System</span>.out.println(<span class="str">"Passed: "</span> + passed);
+    }
+}</pre>
+  </div>
+</div>
+
+
+<!-- ══════════════════ PROBLEM 2 ══════════════════ -->
+<div class="section">
+  <p class="section-number">Problem 02</p>
+  <h2>Product Inventory Processor</h2>
+  <p class="problem-text">Iterate a Hashtable of product names and quantities. Skip any product with quantity == 0 (out of stock). Stop when a quantity greater than 100 is found.</p>
+
+  <div class="two-col">
+    <div class="think-card">
+      <h3>Think First — pen &amp; paper</h3>
+      <div class="think-step"><span class="q q-data">Data</span><span>Hashtable&lt;String, Integer&gt; — need both name and quantity</span></div>
+      <div class="think-step"><span class="q q-data">Iterate</span><span>Use Map.Entry to get key and value in the same step</span></div>
+      <div class="think-step"><span class="q q-stop">STOP?</span><span>qty &gt; 100 → <strong>break</strong> (oversized quantity, halt scan)</span></div>
+      <div class="think-step"><span class="q q-skip">SKIP?</span><span>qty == 0 → <strong>continue</strong> (out of stock, skip)</span></div>
+      <div class="think-step"><span class="q q-do">DO?</span><span>Print product name and quantity normally</span></div>
+    </div>
+    <div class="flow-wrap">
+      <h3>Flowchart</h3>
+      <svg width="100%" viewBox="0 0 260 390" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace">
+        <defs>
+          <marker id="b1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#8a96a8" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="b-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="b-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0e7c72" stroke-width="1.5" stroke-linecap="round"/></marker>
+        </defs>
+        <rect x="70" y="10" width="120" height="32" rx="16" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="30" text-anchor="middle" font-size="11" fill="#0e7c72">next entry</text>
+        <line x1="130" y1="42" x2="130" y2="60" stroke="#8a96a8" stroke-width="1" marker-end="url(#b1)"/>
+        <rect x="35" y="60" width="190" height="32" rx="6" fill="#fdf2f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="130" y="80" text-anchor="middle" font-size="11" fill="#c0392b">qty &gt; 100?</text>
+        <line x1="225" y1="76" x2="245" y2="76" stroke="#c0392b" stroke-width="1" marker-end="url(#b-red)"/>
+        <text x="228" y="71" font-size="10" fill="#c0392b">yes</text>
+        <text x="246" y="80" font-size="10" fill="#c0392b">BREAK</text>
+        <line x1="130" y1="92" x2="130" y2="110" stroke="#8a96a8" stroke-width="1" marker-end="url(#b1)"/>
+        <text x="135" y="106" font-size="10" fill="#8a96a8">no</text>
+        <rect x="35" y="110" width="190" height="32" rx="6" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="130" text-anchor="middle" font-size="11" fill="#0e7c72">qty == 0?</text>
+        <path d="M225 126 L242 126 L242 26 L190 26" fill="none" stroke="#0e7c72" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#b-teal)"/>
+        <text x="228" y="120" font-size="10" fill="#0e7c72">yes</text>
+        <line x1="130" y1="142" x2="130" y2="160" stroke="#8a96a8" stroke-width="1" marker-end="url(#b1)"/>
+        <text x="135" y="156" font-size="10" fill="#8a96a8">no</text>
+        <rect x="50" y="160" width="160" height="32" rx="6" fill="#fdf8ee" stroke="#92600a" stroke-width="1.2"/>
+        <text x="130" y="180" text-anchor="middle" font-size="11" fill="#92600a">print name + qty</text>
+        <path d="M130 192 L130 210 L8 210 L8 26 L70 26" fill="none" stroke="#8a96a8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#b1)"/>
+        <rect x="70" y="348" width="120" height="32" rx="16" fill="#f8f9fb" stroke="#c8cfd9" stroke-width="1.2"/>
+        <text x="130" y="368" text-anchor="middle" font-size="11" fill="#8a96a8">done</text>
+        <path d="M246 90 L246 364 L190 364" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#b-red)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><div class="code-dots"><i class="cd1"></i><i class="cd2"></i><i class="cd3"></i></div><span>ProductsBetter.java</span></div>
+<pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="typ">ProductsBetter</span> {
+    <span class="kw">public static void</span> main(<span class="typ">String</span>[] args) {
+
+        <span class="typ">Hashtable</span>&lt;<span class="typ">String</span>, <span class="typ">Integer</span>&gt; products = <span class="kw">new</span> <span class="typ">Hashtable</span>&lt;&gt;();
+        products.put(<span class="str">"DC motor"</span>,   <span class="num">12</span>);
+        products.put(<span class="str">"Resistors"</span>,  <span class="num">4</span>);
+        products.put(<span class="str">"Phones"</span>,      <span class="num">0</span>);
+        products.put(<span class="str">"Capacitors"</span>, <span class="num">101</span>);
+
+        <span class="cmt">// Map.Entry gives BOTH key and value in one step</span>
+        <span class="kw">for</span> (<span class="typ">Map</span>.<span class="typ">Entry</span>&lt;<span class="typ">String</span>, <span class="typ">Integer</span>&gt; entry : products.entrySet()) {
+            <span class="typ">String</span> name     = entry.getKey();
+            <span class="kw">int</span>    quantity  = entry.getValue();
+
+            <span class="cmt">// 1. STOP guard</span>
+            <span class="kw">if</span> (quantity <span class="op">&gt;</span> <span class="num">100</span>) {
+                <span class="typ">System</span>.out.println(<span class="str">"Stopping at: "</span> + name);
+                <span class="brk">break</span>;
+            }
+            <span class="cmt">// 2. SKIP guard</span>
+            <span class="kw">if</span> (quantity <span class="op">==</span> <span class="num">0</span>) {
+                <span class="typ">System</span>.out.println(<span class="str">"Skipping: "</span> + name);
+                <span class="cnt">continue</span>;
+            }
+            <span class="cmt">// 3. LOGIC</span>
+            <span class="typ">System</span>.out.printf(<span class="str">"%-15s qty = %d%n"</span>, name, quantity);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+
+<!-- ══════════════════ PROBLEM 3 ══════════════════ -->
+<div class="section">
+  <p class="section-number">Problem 03</p>
+  <h2>Day of Week Enum</h2>
+  <p class="problem-text">Use a Java enum for the days of the week. Iterate through all values, skip MONDAY, and stop processing when THURSDAY is reached.</p>
+
+  <div class="two-col">
+    <div class="think-card">
+      <h3>Think First — pen &amp; paper</h3>
+      <div class="think-step"><span class="q q-data">Data</span><span>enum.values() returns an array — use for-each</span></div>
+      <div class="think-step"><span class="q q-data">Tip</span><span>Enums are singletons — compare with <code>==</code>, not <code>.equals()</code></span></div>
+      <div class="think-step"><span class="q q-stop">STOP?</span><span>day == THURSDAY → <strong>break</strong> (THURSDAY itself is not printed)</span></div>
+      <div class="think-step"><span class="q q-skip">SKIP?</span><span>day == MONDAY → <strong>continue</strong> (skip it, move on)</span></div>
+      <div class="think-step"><span class="q q-do">DO?</span><span>Print the day name</span></div>
+    </div>
+    <div class="flow-wrap">
+      <h3>Flowchart</h3>
+      <svg width="100%" viewBox="0 0 260 390" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace">
+        <defs>
+          <marker id="c1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#8a96a8" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="c-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="c-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0e7c72" stroke-width="1.5" stroke-linecap="round"/></marker>
+        </defs>
+        <rect x="70" y="10" width="120" height="32" rx="16" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="30" text-anchor="middle" font-size="11" fill="#0e7c72">next day</text>
+        <line x1="130" y1="42" x2="130" y2="60" stroke="#8a96a8" stroke-width="1" marker-end="url(#c1)"/>
+        <rect x="30" y="60" width="196" height="32" rx="6" fill="#fdf2f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="128" y="80" text-anchor="middle" font-size="11" fill="#c0392b">day == THURSDAY?</text>
+        <line x1="226" y1="76" x2="244" y2="76" stroke="#c0392b" stroke-width="1" marker-end="url(#c-red)"/>
+        <text x="228" y="71" font-size="10" fill="#c0392b">yes</text>
+        <text x="245" y="80" font-size="10" fill="#c0392b">BREAK</text>
+        <line x1="128" y1="92" x2="128" y2="110" stroke="#8a96a8" stroke-width="1" marker-end="url(#c1)"/>
+        <text x="133" y="106" font-size="10" fill="#8a96a8">no</text>
+        <rect x="30" y="110" width="196" height="32" rx="6" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="128" y="130" text-anchor="middle" font-size="11" fill="#0e7c72">day == MONDAY?</text>
+        <path d="M226 126 L242 126 L242 26 L190 26" fill="none" stroke="#0e7c72" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#c-teal)"/>
+        <text x="228" y="120" font-size="10" fill="#0e7c72">yes</text>
+        <line x1="128" y1="142" x2="128" y2="160" stroke="#8a96a8" stroke-width="1" marker-end="url(#c1)"/>
+        <text x="133" y="156" font-size="10" fill="#8a96a8">no</text>
+        <rect x="58" y="160" width="140" height="32" rx="6" fill="#fdf8ee" stroke="#92600a" stroke-width="1.2"/>
+        <text x="128" y="180" text-anchor="middle" font-size="11" fill="#92600a">print day</text>
+        <path d="M128 192 L128 210 L8 210 L8 26 L70 26" fill="none" stroke="#8a96a8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#c1)"/>
+        <rect x="68" y="348" width="120" height="32" rx="16" fill="#f8f9fb" stroke="#c8cfd9" stroke-width="1.2"/>
+        <text x="128" y="368" text-anchor="middle" font-size="11" fill="#8a96a8">done</text>
+        <path d="M245 90 L245 364 L188 364" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#c-red)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><div class="code-dots"><i class="cd1"></i><i class="cd2"></i><i class="cd3"></i></div><span>DaysOfWeek.java</span></div>
+<pre><span class="kw">public class</span> <span class="typ">DaysOfWeek</span> {
+
+    <span class="cmt">// Enum defined inside the class — fine when used in one file only</span>
+    <span class="kw">enum</span> <span class="typ">WeekDays</span> {
+        SATURDAY, SUNDAY, MONDAY, TUESDAY,
+        WEDNESDAY, THURSDAY, FRIDAY
+    }
+
+    <span class="kw">public static void</span> main(<span class="typ">String</span>[] args) {
+
+        <span class="kw">for</span> (<span class="typ">WeekDays</span> day : <span class="typ">WeekDays</span>.values()) {
+
+            <span class="cmt">// 1. STOP guard — use == for enum comparison</span>
+            <span class="kw">if</span> (day <span class="op">==</span> <span class="typ">WeekDays</span>.THURSDAY) { <span class="brk">break</span>; }
+
+            <span class="cmt">// 2. SKIP guard</span>
+            <span class="kw">if</span> (day <span class="op">==</span> <span class="typ">WeekDays</span>.MONDAY)   { <span class="cnt">continue</span>; }
+
+            <span class="cmt">// 3. LOGIC</span>
+            <span class="typ">System</span>.out.println(day);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+
+<!-- ══════════════════ PROBLEM 4 ══════════════════ -->
+<div class="section">
+  <p class="section-number">Problem 04</p>
+  <h2>Even Number Stack &amp; Sum</h2>
+  <p class="problem-text">Process an ArrayList of integers. Skip negative numbers. Stop when a number &gt; 50 is found. Push only even numbers onto a Stack. After processing, pop everything and calculate the sum.</p>
+
+  <div class="two-col">
+    <div class="think-card">
+      <h3>Think First — pen &amp; paper</h3>
+      <div class="think-step"><span class="q q-data">Data</span><span>e.g. [-1, 42, 32, 3, 51, 100, 99, 30]</span></div>
+      <div class="think-step"><span class="q q-stop">STOP?</span><span>number &gt; 50 → <strong>break</strong> immediately</span></div>
+      <div class="think-step"><span class="q q-skip">SKIP?</span><span>number &lt; 0 → <strong>continue</strong> (negatives ignored)</span></div>
+      <div class="think-step"><span class="q q-do">DO?</span><span>number % 2 == 0 → push. Odd numbers silently ignored.</span></div>
+      <div class="think-step"><span class="q q-data">After</span><span>while stack not empty → pop and add to running sum</span></div>
+    </div>
+    <div class="flow-wrap">
+      <h3>Flowchart</h3>
+      <svg width="100%" viewBox="0 0 260 460" xmlns="http://www.w3.org/2000/svg" style="font-family:'JetBrains Mono',monospace">
+        <defs>
+          <marker id="e1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#8a96a8" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="e-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="e-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0e7c72" stroke-width="1.5" stroke-linecap="round"/></marker>
+          <marker id="e-amb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#92600a" stroke-width="1.5" stroke-linecap="round"/></marker>
+        </defs>
+        <rect x="70" y="10" width="120" height="32" rx="16" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="30" text-anchor="middle" font-size="11" fill="#0e7c72">next number</text>
+        <line x1="130" y1="42" x2="130" y2="60" stroke="#8a96a8" stroke-width="1" marker-end="url(#e1)"/>
+        <rect x="40" y="60" width="180" height="32" rx="6" fill="#fdf2f0" stroke="#c0392b" stroke-width="1.2"/>
+        <text x="130" y="80" text-anchor="middle" font-size="11" fill="#c0392b">number &gt; 50?</text>
+        <line x1="220" y1="76" x2="242" y2="76" stroke="#c0392b" stroke-width="1" marker-end="url(#e-red)"/>
+        <text x="222" y="71" font-size="10" fill="#c0392b">yes</text>
+        <text x="243" y="80" font-size="10" fill="#c0392b">BREAK</text>
+        <line x1="130" y1="92" x2="130" y2="110" stroke="#8a96a8" stroke-width="1" marker-end="url(#e1)"/>
+        <text x="135" y="106" font-size="10" fill="#8a96a8">no</text>
+        <rect x="40" y="110" width="180" height="32" rx="6" fill="#f0faf9" stroke="#0e7c72" stroke-width="1.2"/>
+        <text x="130" y="130" text-anchor="middle" font-size="11" fill="#0e7c72">number &lt; 0?</text>
+        <path d="M220 126 L238 126 L238 26 L190 26" fill="none" stroke="#0e7c72" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#e-teal)"/>
+        <text x="222" y="120" font-size="10" fill="#0e7c72">yes</text>
+        <line x1="130" y1="142" x2="130" y2="160" stroke="#8a96a8" stroke-width="1" marker-end="url(#e1)"/>
+        <text x="135" y="156" font-size="10" fill="#8a96a8">no</text>
+        <rect x="40" y="160" width="180" height="32" rx="6" fill="#f4f1fd" stroke="#5b3fbe" stroke-width="1.2"/>
+        <text x="130" y="180" text-anchor="middle" font-size="11" fill="#5b3fbe">number % 2 == 0?</text>
+        <line x1="130" y1="192" x2="130" y2="210" stroke="#8a96a8" stroke-width="1" marker-end="url(#e1)"/>
+        <text x="135" y="206" font-size="10" fill="#8a96a8">yes</text>
+        <path d="M40 176 L22 176 L22 248 L66 248" fill="none" stroke="#8a96a8" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#e1)"/>
+        <text x="6" y="172" font-size="10" fill="#8a96a8">no</text>
+        <rect x="66" y="210" width="128" height="32" rx="6" fill="#f4f1fd" stroke="#5b3fbe" stroke-width="1.5"/>
+        <text x="130" y="230" text-anchor="middle" font-size="11" fill="#5b3fbe">push to stack</text>
+        <line x1="130" y1="242" x2="130" y2="260" stroke="#8a96a8" stroke-width="1" marker-end="url(#e1)"/>
+        <path d="M130 260 L130 278 L8 278 L8 26 L70 26" fill="none" stroke="#8a96a8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#e1)"/>
+        <line x1="20" y1="308" x2="240" y2="308" stroke="#e2e6ed" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="130" y="324" text-anchor="middle" font-size="10" fill="#8a96a8">phase 2 — drain stack</text>
+        <line x1="130" y1="330" x2="130" y2="344" stroke="#92600a" stroke-width="1" marker-end="url(#e-amb)"/>
+        <rect x="40" y="344" width="180" height="32" rx="6" fill="#fdf8ee" stroke="#92600a" stroke-width="1.2"/>
+        <text x="130" y="364" text-anchor="middle" font-size="11" fill="#92600a">stack not empty?</text>
+        <line x1="130" y1="376" x2="130" y2="394" stroke="#92600a" stroke-width="1" marker-end="url(#e-amb)"/>
+        <text x="135" y="390" font-size="10" fill="#92600a">yes</text>
+        <rect x="62" y="394" width="136" height="32" rx="6" fill="#fdf8ee" stroke="#92600a" stroke-width="1.5"/>
+        <text x="130" y="414" text-anchor="middle" font-size="11" fill="#92600a">pop → sum += val</text>
+        <path d="M62 410 L42 410 L42 360 L40 360" fill="none" stroke="#92600a" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#e-amb)"/>
+        <line x1="220" y1="360" x2="242" y2="360" stroke="#8a96a8" stroke-width="1" marker-end="url(#e1)"/>
+        <text x="222" y="355" font-size="10" fill="#8a96a8">empty</text>
+        <text x="243" y="356" font-size="10" fill="#8a96a8">print</text>
+        <text x="243" y="367" font-size="10" fill="#8a96a8">sum</text>
+        <path d="M243 80 L243 344" fill="none" stroke="#c0392b" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#e-red)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><div class="code-dots"><i class="cd1"></i><i class="cd2"></i><i class="cd3"></i></div><span>StackExampleBetter.java</span></div>
+<pre><span class="kw">import</span> java.util.*;
+
+<span class="kw">public class</span> <span class="typ">StackExampleBetter</span> {
+    <span class="kw">public static void</span> main(<span class="typ">String</span>[] args) {
+
+        <span class="typ">ArrayList</span>&lt;<span class="typ">Integer</span>&gt; numbers = <span class="kw">new</span> <span class="typ">ArrayList</span>&lt;&gt;(
+            <span class="typ">Arrays</span>.asList(<span class="num">-1</span>, <span class="num">42</span>, <span class="num">32</span>, <span class="num">3</span>, <span class="num">51</span>, <span class="num">100</span>, <span class="num">99</span>, <span class="num">30</span>));
+
+        <span class="typ">Stack</span>&lt;<span class="typ">Integer</span>&gt; processedNumbers = <span class="kw">new</span> <span class="typ">Stack</span>&lt;&gt;();
+
+        <span class="cmt">// ── Phase 1: fill the stack ──────────────────────</span>
+        <span class="kw">for</span> (<span class="kw">int</span> number : numbers) {
+
+            <span class="cmt">// 1. STOP guard</span>
+            <span class="kw">if</span> (number <span class="op">&gt;</span>  <span class="num">50</span>) { <span class="brk">break</span>; }
+
+            <span class="cmt">// 2. SKIP guard — saves the even-check below</span>
+            <span class="kw">if</span> (number <span class="op">&lt;</span>  <span class="num">0</span>)  { <span class="cnt">continue</span>; }
+
+            <span class="cmt">// 3. LOGIC</span>
+            <span class="kw">if</span> (number <span class="op">%</span> <span class="num">2</span> <span class="op">==</span> <span class="num">0</span>) { processedNumbers.<span class="psh">push</span>(number); }
+        }
+
+        <span class="cmt">// ── Phase 2: drain the stack ─────────────────────</span>
+        <span class="kw">int</span> sum = <span class="num">0</span>;
+        <span class="kw">while</span> (!processedNumbers.empty()) {
+            sum += processedNumbers.<span class="psh">pop</span>();
+        }
+
+        <span class="typ">System</span>.out.println(<span class="str">"Sum of even stack elements: "</span> + sum);
+        <span class="cmt">// 51 triggers break → stack has [42, 32] → sum = 74</span>
+    }
+}</pre>
+  </div>
+</div>
+
+
+<!-- ══════════════════ CHEAT SHEET ══════════════════ -->
+<div class="section">
+  <p class="section-number">Quick Reference</p>
+  <h2>The Three-Question Rule</h2>
+  <p class="problem-text">Ask these three questions about every element, in this exact order, every single time.</p>
+
+  <div class="three-col">
+    <div class="ref-card rc-stop">
+      <div class="rc-label">① STOP?</div>
+      <div class="rc-body">Should I halt the entire loop because of this element?</div>
+      <div class="rc-code">→ break;</div>
+    </div>
+    <div class="ref-card rc-skip">
+      <div class="rc-label">② SKIP?</div>
+      <div class="rc-body">Should I ignore this element and jump to the next one?</div>
+      <div class="rc-code">→ continue;</div>
+    </div>
+    <div class="ref-card rc-do">
+      <div class="rc-label">③ DO?</div>
+      <div class="rc-body">What is the actual logic for valid, in-range elements?</div>
+      <div class="rc-code">→ your logic</div>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-header"><div class="code-dots"><i class="cd1"></i><i class="cd2"></i><i class="cd3"></i></div><span>universal pattern — apply to every loop you write</span></div>
+<pre><span class="kw">for</span> (<span class="typ">T</span> element : collection) {
+
+    <span class="kw">if</span> (stopCondition)        { <span class="brk">break</span>; }     <span class="cmt">// ① always first</span>
+    <span class="kw">if</span> (skipCondition)        { <span class="cnt">continue</span>; }  <span class="cmt">// ② always second</span>
+
+    <span class="cmt">// ③ logic — only reached by clean, valid elements</span>
+    doSomethingWith(element);
+}</pre>
+  </div>
+</div>
+
+<footer>Java Loop Control &nbsp;·&nbsp; break &amp; continue &nbsp;·&nbsp; Section Examples</footer>
+</body>
+</html>
